@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/* AuthenFlow Master Stylesheet (Tailwind v4)
+  This file handles the premium dark-mode theme and glassmorphism.
+*/
+
+@theme {
+  --color-brand-indigo: #6366f1;
+  --color-brand-purple: #9333ea;
+  --color-brand-dark: #020617;
+  
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Global Base Layer */
+@layer base {
+  :root {
+    background-color: #020617;
+    color: #f8fafc;
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Resetting default button/input behaviors for the dark theme */
+  button {
+    cursor: pointer;
+  }
+}
+
+/* AuthenFlow Premium Utility Layer */
+@layer utilities {
+  /* The professional glass effect seen in your dashboard screenshots */
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar-gradient {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(147, 51, 234, 0.1));
+  }
+
+  /* The active state for sidebar buttons you mentioned */
+  .nav-active {
+    background: linear-gradient(to right, #6366f1, #9333ea) !important;
+    color: white !important;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  }
+
+  .text-gradient {
+    background: linear-gradient(to bottom right, #a5b4fc, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Custom Scrollbar for the dark dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
