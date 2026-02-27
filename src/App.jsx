@@ -10,6 +10,7 @@ import {
   RotateCcw, FileText, CheckCircle2, AlertTriangle, Info, FileUp, ExternalLink,
   ChevronDown, MoreVertical, Timer, FileCheck
 } from 'lucide-react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // --- SHARED DATA ---
 const studentData = {
@@ -492,6 +493,7 @@ export default function App() {
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <SpeedInsights />
     </BrowserRouter>
   );
 }
