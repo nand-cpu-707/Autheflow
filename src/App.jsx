@@ -11,7 +11,7 @@ import {
   Files, History as HistoryIcon, UploadCloud, MessageSquare, BarChart3, Bell,
   Mail, Phone, Calendar, BookOpen, Award, Users, Building2, FileText,
   Clock, MapPin, Send, RotateCcw, Filter, CheckCheck, Trash2, Search,
-  ExternalLink, ChevronDown, MoreVertical, Timer, FileCheck, Menu, X, Shield, Terminal, PieChart, Briefcase, Activity, Settings, ChevronRight, UserPlus, UserMinus, Snowflake, CheckCircle2, MessageCircle, MonitorDot, LogIn, HardDrive, Cpu, ClipboardCheck, ArrowLeft
+  ExternalLink, ChevronDown, MoreVertical, Timer, FileCheck, Menu, X, Shield, Terminal, PieChart, Briefcase, Activity, Settings, ChevronRight, UserPlus, UserMinus, Snowflake, CheckCircle2, MessageCircle, MonitorDot, LogIn, HardDrive, Cpu, ClipboardCheck, ArrowLeft, Globe
 } from 'lucide-react';
 
 // --- DATA CONFIGURATION: 16 GROUPS ---
@@ -46,6 +46,7 @@ const studentInfo = {
   group: "GRP-24-12",
   attendance: "92%",
   uploadStatus: "Pending (Seminar 2)",
+  projectTitle: "AuthenFlow – Role-Based Project Management System",
 };
 
 const dummyCredentials = {
@@ -77,12 +78,12 @@ const navConfigs = {
   ],
   Admin: [
     { label: "Master Panel", icon: <Terminal size={18} />, path: "/admin" },
-    { label: "Intelligence Monitor", icon: <MonitorDot size={18} />, path: "/admin-monitor" },
-    { label: "Group Evaluations", icon: <ClipboardCheck size={18} />, path: "/hod-evaluations" },
-    { label: "Student Cluster", icon: <Users size={18} />, path: "/group" },
-    { label: "Freeze Control", icon: <Snowflake size={18} />, path: "/freeze" },
-    { label: "Audit Logs", icon: <HistoryIcon size={18} />, path: "/history" },
-    { label: "Settings", icon: <Settings size={18} />, path: "/admin" },
+    { label: "System Monitor", icon: <MonitorDot size={18} />, path: "/admin-monitor" },
+    { label: "Group Registry", icon: <Globe size={18} />, path: "/hod-evaluations" },
+    { label: "Evaluation Hub", icon: <Award size={18} />, path: "/evaluate" },
+    { label: "Dept Oversight", icon: <Building2 size={18} />, path: "/hod" },
+    { label: "Security Logs", icon: <HistoryIcon size={18} />, path: "/history" },
+    { label: "Configuration", icon: <Settings size={18} />, path: "/admin" },
   ]
 };
 
@@ -159,11 +160,11 @@ const AppLayout = ({ children, activeTitle }) => {
           </div>
           <div className="flex items-center gap-3">
             <div className="h-11 w-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 group cursor-pointer hover:bg-white/10 transition-all"><Bell size={18} /></div>
-            <div className={`h-11 w-11 rounded-2xl bg-gradient-to-br ${theme.grad} flex items-center justify-center text-white font-black text-sm shadow-xl uppercase italic`}>{role[0]}</div>
+            <div className={`h-11 w-11 rounded-2xl bg-gradient-to-br ${theme.grad} flex items-center justify-center text-white font-black text-sm shadow-xl uppercase italic`}>{role === 'Student' ? studentInfo.name[0] : role[0]}</div>
           </div>
         </header>
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex-1">{children}</motion.div>
-        <footer className="mt-12 lg:mt-20 pt-8 border-t border-white/5 text-center text-slate-700 text-[9px] font-black uppercase tracking-[0.5em]">Centralized Academic Governance • AuthenFlow Enterprise</footer>
+        <footer className="mt-12 lg:mt-20 pt-8 border-t border-white/5 text-center text-slate-700 text-[9px] font-black uppercase tracking-[0.5em]">Academic Integrity Engine • AuthenFlow Secured</footer>
       </main>
     </div>
   );
@@ -185,7 +186,7 @@ const LoginPage = () => {
     const creds = dummyCredentials[currentRole];
     if (user === creds.username && pass === creds.password) {
       setLoading(true);
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 1200));
       localStorage.setItem('userRole', currentRole);
       navigate(creds.path);
     }
@@ -197,48 +198,60 @@ const LoginPage = () => {
         {isAdminView ? (
           <motion.div key="admin-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069')] bg-cover bg-center grayscale brightness-50" />
-            <div className="absolute inset-0 backdrop-blur-[8px] bg-black/40" />
+            <div className="absolute inset-0 backdrop-blur-[10px] bg-black/40" />
           </motion.div>
         ) : (
-          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-white z-0" />
+          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-white z-0">
+             <div className="absolute top-0 right-0 w-full h-full opacity-5 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none" />
+             <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/5 blur-[120px] rounded-full" />
+          </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div layout className="relative z-10 w-full max-w-[460px] px-4">
-        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[48px] p-10 shadow-2xl" : "bg-white border-slate-200 rounded-[32px] p-10 shadow-xl"}`}>
+      <motion.div layout className="relative z-10 w-full max-w-[480px] px-4">
+        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[48px] p-10 lg:p-14 shadow-2xl" : "bg-white border-slate-200 rounded-[40px] p-10 lg:p-14 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)]"}`}>
           <div className="text-center mb-10">
-            <h1 className={`text-4xl font-black tracking-tighter uppercase italic ${isAdminView ? "text-white" : "text-slate-900"}`}>{isAdminView ? "Admin Login" : "User Portal"}</h1>
-            <p className={`text-xs mt-2 font-bold uppercase tracking-widest ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Centralized Identity Node</p>
+            {!isAdminView && (
+              <div className="flex justify-center mb-6">
+                 <div className="flex items-center gap-2 text-indigo-900 font-black tracking-tighter text-2xl uppercase">
+                   <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white italic">AF</div>
+                   AuthenFlow
+                 </div>
+              </div>
+            )}
+            <h1 className={`text-3xl font-black tracking-tight uppercase italic ${isAdminView ? "text-white" : "text-slate-900"}`}>{isAdminView ? "Admin Login" : "Centralized Portal"}</h1>
+            <p className={`text-[10px] mt-2 font-black uppercase tracking-[0.3em] ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Authentication Gateway Layer</p>
           </div>
 
           {!isAdminView && (
             <div className="bg-slate-100 p-1 rounded-2xl grid grid-cols-3 gap-1 mb-8 border border-slate-200">
               {["Student", "Faculty", "HOD"].map(r => (
-                <button key={r} onClick={() => setActiveRole(r)} className={`relative py-3 rounded-xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-indigo-600" : "text-slate-400"}`}>
-                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-xl shadow-md" />}
-                  <span className="relative z-10 text-[9px] font-black uppercase tracking-widest">{r}</span>
+                <button key={r} onClick={() => setActiveRole(r)} className={`relative py-3.5 rounded-xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-indigo-600" : "text-slate-400"}`}>
+                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-xl shadow-md border border-slate-100" />}
+                  <span className="relative z-10 text-[10px] font-black uppercase tracking-widest">{r}</span>
                 </button>
               ))}
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isAdminView ? "text-slate-400" : "text-slate-600"}`}>Identification UID</label>
-              <input type="text" placeholder="Enter UID" value={user} onChange={e => setUser(e.target.value)} className={`w-full p-4 rounded-2xl text-sm focus:outline-none transition-all ${isAdminView ? "bg-white/5 border-white/10 text-white" : "bg-slate-50 border border-slate-200 text-slate-900 focus:border-indigo-500"}`} />
+              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isAdminView ? "text-slate-400" : "text-slate-600"}`}>Account Identifier</label>
+              <input type="text" placeholder="Enter UID" value={user} onChange={e => setUser(e.target.value)} className={`w-full p-4.5 rounded-2xl text-sm focus:outline-none transition-all ${isAdminView ? "bg-white/5 border-white/10 text-white" : "bg-slate-50 border border-slate-200 text-slate-900 focus:border-indigo-500"}`} />
             </div>
             <div className="space-y-2">
-              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isAdminView ? "text-slate-400" : "text-slate-600"}`}>Security Password</label>
-              <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} className={`w-full p-4 rounded-2xl text-sm focus:outline-none transition-all ${isAdminView ? "bg-white/5 border-white/10 text-white" : "bg-slate-50 border border-slate-200 text-slate-900 focus:border-indigo-500"}`} />
+              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isAdminView ? "text-slate-400" : "text-slate-600"}`}>System Access Key</label>
+              <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} className={`w-full p-4.5 rounded-2xl text-sm focus:outline-none transition-all ${isAdminView ? "bg-white/5 border-white/10 text-white" : "bg-slate-50 border border-slate-200 text-slate-900 focus:border-indigo-500"}`} />
             </div>
-            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl transition-all ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500" : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"}`}>
-              {loading ? "Initializing..." : "Secure Entry"}
+            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500" : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-indigo-500/20"}`}>
+              {isAdminView && <div className="absolute inset-0 bg-white/5 -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />}
+              <span className="relative z-10">{loading ? "Synchronizing..." : "Initiate Entry"}</span>
             </button>
           </form>
 
           <div className="mt-8 text-center border-t border-slate-100 pt-6">
             <button onClick={() => setIsAdminView(!isAdminView)} className={`text-[10px] font-black uppercase tracking-widest ${isAdminView ? "text-slate-400 hover:text-white" : "text-indigo-600 hover:text-indigo-800"}`}>
-              {isAdminView ? "← Back to User Portal" : "Administrator Access"}
+              {isAdminView ? "← Return to Portal" : "Administrator Terminal"}
             </button>
           </div>
         </div>
@@ -247,7 +260,7 @@ const LoginPage = () => {
   );
 };
 
-// --- HOD GROUP EVALUATIONS COMPONENT ---
+// --- HOD GROUP EVALUATIONS ---
 const GroupEvaluations = () => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [search, setSearch] = useState("");
@@ -264,82 +277,53 @@ const GroupEvaluations = () => {
         {!selectedGroup ? (
           <motion.div key="list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
             <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-               <div className="relative w-full md:w-96 group">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-amber-400 transition-colors" size={18} />
-                  <input 
-                    type="text" 
-                    placeholder="Search by ID, Guide or Project..." 
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-12 text-sm text-white focus:outline-none focus:border-amber-500/50"
-                  />
+               <div className="relative w-full md:w-96">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={18} />
+                  <input type="text" placeholder="Filter by Group, Guide or Project..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-12 text-sm text-white focus:border-amber-500/50 outline-none transition-all" />
                </div>
                <div className="flex gap-3">
-                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center">
-                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Groups</p>
-                    <p className="text-xl font-black text-white">16</p>
-                  </div>
-                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center">
-                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Verified</p>
-                    <p className="text-xl font-black text-emerald-400">06</p>
-                  </div>
+                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Batches</p><p className="text-xl font-black text-white uppercase italic">16 Groups</p></div>
+                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Evaluated</p><p className="text-xl font-black text-emerald-400 uppercase italic">09/16</p></div>
                </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              {filteredGroups.map((group, idx) => (
-                <motion.div 
-                  key={group.id}
-                  whileHover={{ y: -5, backgroundColor: "rgba(255,255,255,0.06)" }}
-                  onClick={() => setSelectedGroup(group)}
-                  className="bg-white/5 border border-white/10 rounded-[28px] p-6 cursor-pointer transition-all group overflow-hidden relative"
-                >
-                  <div className="flex justify-between items-start mb-4">
+              {filteredGroups.map((group) => (
+                <motion.div key={group.id} whileHover={{ y: -5, backgroundColor: "rgba(255,255,255,0.06)" }} onClick={() => setSelectedGroup(group)} className="bg-white/5 border border-white/10 rounded-[32px] p-8 cursor-pointer transition-all group overflow-hidden relative">
+                  <div className="flex justify-between items-start mb-6">
                     <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">{group.id}</span>
-                    <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-tighter ${group.status === 'Verified' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>
-                      {group.status}
-                    </div>
+                    <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-tighter ${group.status === 'Verified' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>{group.status}</div>
                   </div>
-                  <h4 className="text-white font-bold text-sm mb-3 tracking-tight group-hover:text-amber-400 transition-colors line-clamp-1 italic uppercase">{group.title}</h4>
-                  <div className="flex items-center gap-2 mt-auto">
-                    <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-[8px] font-black text-slate-500 uppercase italic">G</div>
-                    <span className="text-slate-500 text-[11px] font-medium">{group.guide}</span>
+                  <h4 className="text-white font-bold text-sm mb-4 tracking-tight group-hover:text-amber-400 transition-colors uppercase italic leading-tight line-clamp-2">{group.title}</h4>
+                  <div className="flex items-center gap-2 mt-auto border-t border-white/5 pt-4">
+                    <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Guide:</span>
+                    <span className="text-white text-[11px] font-bold italic">{group.guide}</span>
                   </div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         ) : (
-          <motion.div key="detail" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-white/5 border border-white/10 rounded-[40px] p-8 lg:p-12 shadow-2xl overflow-hidden relative">
-            <button onClick={() => setSelectedGroup(null)} className="mb-10 flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest"><ArrowLeft size={16}/> Back to Registry</button>
-            
+          <motion.div key="detail" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="bg-white/5 border border-white/10 rounded-[40px] p-8 lg:p-14 shadow-2xl relative">
+            <button onClick={() => setSelectedGroup(null)} className="mb-12 flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest"><ArrowLeft size={16}/> Return to Repository</button>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                <div className="lg:col-span-2">
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="text-amber-500 font-black text-sm uppercase tracking-widest">{selectedGroup.id}</span>
-                    <div className="h-[1px] flex-1 bg-white/5" />
+                  <span className="text-amber-500 font-black text-sm uppercase tracking-[0.2em] mb-4 block">{selectedGroup.id}</span>
+                  <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tighter uppercase italic leading-none mb-6 underline decoration-amber-500 decoration-8">{selectedGroup.title}</h2>
+                  <div className="flex flex-wrap gap-4 mt-10">
+                     <div className="bg-white/5 border border-white/5 px-6 py-4 rounded-3xl"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Lead Guide</p><p className="text-white font-bold">{selectedGroup.guide}</p></div>
+                     <div className="bg-white/5 border border-white/5 px-6 py-4 rounded-3xl"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Dept Status</p><p className="text-emerald-400 font-black italic uppercase">Synchronized</p></div>
                   </div>
-                  <h2 className="text-4xl font-black text-white tracking-tighter uppercase italic leading-none mb-4">{selectedGroup.title}</h2>
-                  <p className="text-slate-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2">
-                    Lead Guide: <span className="text-white">{selectedGroup.guide}</span>
-                  </p>
                </div>
-               
                <div className="space-y-4">
                   {[
                     { l: "Seminar 1", v: selectedGroup.marks.seminar1, max: 20 },
                     { l: "Seminar 2", v: selectedGroup.marks.seminar2, max: 20 },
-                    { l: "Outcome", v: selectedGroup.marks.outcome, max: 30 },
-                    { l: "Performance", v: selectedGroup.marks.overall, max: 30 },
+                    { l: "Outcome Log", v: selectedGroup.marks.outcome, max: 30 },
+                    { l: "Contribution", v: selectedGroup.marks.overall, max: 30 },
                   ].map(m => (
-                    <div key={m.l} className="bg-white/5 p-5 rounded-3xl border border-white/5 flex items-center justify-between group hover:bg-white/10 transition-all">
-                      <div>
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">{m.l}</p>
-                        <p className="text-2xl font-black text-white tracking-tight">{m.v}<span className="text-xs text-slate-700 ml-1">/ {m.max}</span></p>
-                      </div>
-                      <div className="w-12 h-12 rounded-full border-4 border-amber-500/20 flex items-center justify-center text-[10px] font-black text-amber-500 group-hover:scale-110 transition-transform">
-                        {Math.round((m.v / m.max) * 100)}%
-                      </div>
+                    <div key={m.l} className="bg-white/5 p-6 rounded-3xl border border-white/5 flex items-center justify-between group hover:bg-white/10 transition-all">
+                      <div><p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">{m.l}</p><p className="text-2xl font-black text-white tracking-tight">{m.v}<span className="text-xs text-slate-700 ml-1 italic">/ {m.max}</span></p></div>
+                      <div className="w-12 h-12 rounded-full border-4 border-amber-500/20 flex items-center justify-center text-[10px] font-black text-amber-500 group-hover:scale-110 transition-transform">{Math.round((m.v / m.max) * 100)}%</div>
                     </div>
                   ))}
                </div>
@@ -351,34 +335,13 @@ const GroupEvaluations = () => {
   );
 };
 
-// --- OTHER DASHBOARDS ---
-
-const HODDashboard = () => (
-  <AppLayout activeTitle="Global View">
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-      {[
-        { l: "Department Health", v: "Optimal", c: "emerald" },
-        { l: "Evaluated Batches", v: "16 Groups", c: "amber" },
-        { l: "Pending Audit", v: "04 Nodes", c: "rose" }
-      ].map(s => (
-        <div key={s.l} className="bg-white/5 border border-white/10 p-8 rounded-[32px] group hover:bg-white/[0.08] transition-all">
-          <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mb-3">{s.l}</p>
-          <p className={`text-3xl font-black text-white tracking-tighter uppercase italic group-hover:text-${s.c}-400 transition-colors`}>{s.v}</p>
-        </div>
-      ))}
-    </div>
-    <div className="bg-white/5 border border-white/10 rounded-[40px] p-20 text-center border-dashed border-2">
-      <Activity size={40} className="mx-auto text-slate-600 mb-6 animate-pulse opacity-30" />
-      <p className="text-slate-600 font-black text-xs uppercase tracking-[0.5em] italic">Department Performance Node Active • Streaming Batch Data</p>
-    </div>
-  </AppLayout>
-);
+// --- REMAINING COMPONENTS ---
 
 const AdminDashboard = () => {
   const activities = [
     { u: "Anandhu Sebastian", a: "Uploaded Literature Review", t: "2 mins ago", r: "Student" },
     { u: "Prof. Neha Zade", a: "Verified Group A-12 Marks", t: "15 mins ago", r: "Faculty" },
-    { u: "HOD CSE", a: "Authorized GRP-24-04 Final Scores", t: "1 hour ago", r: "HOD" },
+    { u: "HOD CSE", a: "Authorized Final Valuation GRP-16", t: "1 hour ago", r: "HOD" },
     { u: "Sneha K.", a: "Modified Project Abstract", t: "5 hours ago", r: "Student" },
   ];
   return (
@@ -386,20 +349,17 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-8">
          {[
            { l: "Nodes Online", v: "1,248", i: <Cpu/>, c: "rose" },
-           { l: "Total Records", v: "84.2k", i: <HardDrive/>, c: "indigo" },
-           { l: "Intelligence", v: "Master", i: <Shield/>, c: "emerald" },
-           { l: "Sync Uptime", v: "99.9%", i: <Activity/>, c: "blue" },
+           { l: "Storage Load", v: "84.2 GB", i: <HardDrive/>, c: "indigo" },
+           { l: "Global Sync", v: "Secure", i: <Shield/>, c: "emerald" },
+           { l: "Uptime Node", v: "99.9%", i: <Activity/>, c: "blue" },
          ].map(s => (
            <div key={s.l} className="bg-white/5 border border-white/10 rounded-[32px] p-6 group transition-all">
-             <div className="flex items-center justify-between mb-4">
-               <div className={`w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:scale-110 transition-transform`}>{s.i}</div>
-             </div>
-             <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{s.l}</p>
-             <p className="text-2xl font-black text-white">{s.v}</p>
+             <div className="flex items-center justify-between mb-4"><div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:scale-110 transition-transform">{s.i}</div></div>
+             <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{s.l}</p><p className="text-2xl font-black text-white uppercase italic">{s.v}</p>
            </div>
          ))}
       </div>
-      <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden">
+      <div className="bg-white/5 border border-white/10 rounded-[40px] overflow-hidden shadow-2xl">
         <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
            <h3 className="text-white font-black text-lg flex items-center gap-3 uppercase tracking-tighter"><MonitorDot size={20} className="text-rose-500" /> Intelligence Monitor</h3>
            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Network Synchronized</span>
@@ -407,16 +367,16 @@ const AdminDashboard = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead><tr className="bg-white/[0.01] border-b border-white/5">
-                <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Authorized User</th>
+                <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Operator</th>
                 <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Action Node</th>
                 <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Timestamp</th>
             </tr></thead>
             <tbody className="divide-y divide-white/5">
               {activities.map((act, i) => (
                 <tr key={i} className="hover:bg-white/[0.03] transition-all">
-                  <td className="px-8 py-6"><span className="text-sm font-bold text-white uppercase">{act.u}</span></td>
+                  <td className="px-8 py-6"><span className="text-sm font-bold text-white uppercase italic">{act.u}</span></td>
                   <td className="px-8 py-6"><p className="text-sm text-slate-400 font-medium">{act.a}</p></td>
-                  <td className="px-8 py-6"><span className="text-[10px] text-slate-500 font-bold uppercase">{act.t}</span></td>
+                  <td className="px-8 py-6"><span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">{act.t}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -430,13 +390,16 @@ const AdminDashboard = () => {
 const StudentDashboard = () => (
   <AppLayout activeTitle="Dashboard">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[32px] p-8 shadow-2xl relative overflow-hidden group border border-white/10">
+      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[32px] p-8 lg:p-12 shadow-2xl relative overflow-hidden group border border-white/10">
         <div className="relative z-10 flex flex-col sm:flex-row items-center gap-8 text-center sm:text-left">
-          <div className="w-24 h-24 rounded-[30px] bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center text-4xl font-black text-white shadow-2xl">{studentInfo.name[0]}</div>
+          <div className="w-28 h-28 rounded-[35px] bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center text-5xl font-black text-white shadow-2xl">{studentInfo.name[0]}</div>
           <div>
-            <h2 className="text-3xl font-black text-white tracking-tighter leading-tight uppercase italic">{studentInfo.name}</h2>
-            <p className="text-indigo-100/70 text-xs font-black uppercase tracking-widest mt-1">{studentInfo.department}</p>
-            <p className="text-white/30 text-[10px] font-black mt-4 uppercase">Node UID: {studentInfo.uid}</p>
+            <h2 className="text-3xl lg:text-4xl font-black text-white tracking-tighter leading-none uppercase italic">{studentInfo.name}</h2>
+            <p className="text-indigo-100/70 text-xs font-black uppercase tracking-[0.2em] mt-3">{studentInfo.department}</p>
+            <div className="flex gap-2 mt-6">
+               <span className="bg-white/10 px-3 py-1.5 rounded-full text-[9px] font-black text-white uppercase border border-white/5">Node ID: {studentInfo.uid}</span>
+               <span className="bg-white/10 px-3 py-1.5 rounded-full text-[9px] font-black text-white uppercase border border-white/5 italic">Term IV</span>
+            </div>
           </div>
         </div>
       </div>
@@ -447,10 +410,10 @@ const StudentDashboard = () => (
           { l: "Sync Status", v: "Active", i: <Activity size={16}/>, c: "blue" },
           { l: "Term Year", v: "2nd Year", i: <Calendar size={16}/>, c: "rose" },
         ].map(s => (
-          <div key={s.l} className="bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/[0.08] transition-all">
-            <span className={`text-${s.c}-400 opacity-50 block mb-2`}>{s.i}</span>
-            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">{s.l}</p>
-            <p className="text-xl font-black text-white uppercase italic">{s.v}</p>
+          <div key={s.l} className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/[0.08] transition-all">
+            <span className={`text-${s.c}-400 opacity-50 block mb-3`}>{s.i}</span>
+            <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{s.l}</p>
+            <p className="text-2xl font-black text-white uppercase italic tracking-tighter">{s.v}</p>
           </div>
         ))}
       </div>
@@ -466,19 +429,19 @@ export default function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin-monitor" element={<AdminDashboard />} />
-        <Route path="/hod" element={<HODDashboard />} />
+        <Route path="/hod" element={<AppLayout activeTitle="Global View"><div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">{[{ l: "Dept Health", v: "Optimal", c: "emerald" }, { l: "Active Groups", v: "16 Nodes", c: "amber" }, { l: "Pending Audit", v: "04 Logs", c: "rose" }].map(s => (<div key={s.l} className="bg-white/5 border border-white/10 p-8 rounded-[32px] group hover:bg-white/[0.08] transition-all"><p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mb-3">{s.l}</p><p className="text-3xl font-black text-white uppercase italic">{s.v}</p></div>))}</div><div className="bg-white/5 border border-white/10 rounded-[40px] p-20 text-center border-dashed border-2"><Activity size={40} className="mx-auto text-slate-600 mb-6 animate-pulse opacity-30" /><p className="text-slate-600 font-black text-xs uppercase tracking-[0.5em] italic">Streaming Batch Intelligence Node Active</p></div></AppLayout>} />
         <Route path="/hod-evaluations" element={<GroupEvaluations />} />
         <Route path="/profile" element={<StudentDashboard />} />
-        <Route path="/group" element={<AppLayout activeTitle="Allotted Group"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Node Cluster: {studentInfo.group} • Lead: {studentInfo.guide}</div></AppLayout>} />
-        <Route path="/status" element={<AppLayout activeTitle="My Status"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Current Log: {studentInfo.uploadStatus}</div></AppLayout>} />
+        <Route path="/group" element={<AppLayout activeTitle="Allotted Group"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Node Cluster: {studentInfo.group} • Guide ID: {studentInfo.guide}</div></AppLayout>} />
+        <Route path="/status" element={<AppLayout activeTitle="My Status"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em] italic">Current Sync: {studentInfo.uploadStatus}</div></AppLayout>} />
         <Route path="/query" element={<AppLayout activeTitle="Raise Query"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Communication Port Ready</div></AppLayout>} />
-        <Route path="/faculty" element={<AppLayout activeTitle="Faculty Dashboard"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Faculty Analytics Hub</div></AppLayout>} />
-        <Route path="/faculty-groups" element={<AppLayout activeTitle="Assigned Groups"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Active Guide Registry</div></AppLayout>} />
-        <Route path="/evaluate" element={<AppLayout activeTitle="Marking Terminal"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Score Submission Online</div></AppLayout>} />
-        <Route path="/attendance" element={<AppLayout activeTitle="Attendance Log"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Presence Registry Active</div></AppLayout>} />
-        <Route path="/freeze" element={<AppLayout activeTitle="Freeze Control"><div className="p-20 text-center bg-amber-600/5 rounded-[40px] text-amber-500 font-black tracking-widest text-xs uppercase tracking-[0.4em] italic underline decoration-amber-500 decoration-2">System Interlock: Terminal Access Freeze Active</div></AppLayout>} />
-        <Route path="/verify" element={<AppLayout activeTitle="Verify Valuation"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Authorization Chain Verified</div></AppLayout>} />
-        <Route path="/history" element={<AppLayout activeTitle="Audit Logs"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Immutable Ledger Stream</div></AppLayout>} />
+        <Route path="/faculty" element={<AppLayout activeTitle="Faculty Terminal"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Faculty Performance Analytics</div></AppLayout>} />
+        <Route path="/faculty-groups" element={<AppLayout activeTitle="Assigned Groups"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Active Cluster Registry Online</div></AppLayout>} />
+        <Route path="/evaluate" element={<AppLayout activeTitle="Evaluation System"><div className="bg-white/5 border border-white/10 rounded-[40px] p-10 lg:p-14 shadow-2xl"><div className="mb-10 border-b border-white/5 pb-8"><h4 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Assessment Node: A-12</h4><p className="text-slate-500 text-[10px] font-black tracking-widest uppercase opacity-60">Continuous Valuation Flow • Semester IV</p></div><div className="space-y-4">{[{ label: "Seminar 1", weight: "20 Marks" }, { label: "Seminar 2", weight: "20 Marks" }, { label: "Outcome (Paper)", weight: "30 Marks" }, { label: "Performance", weight: "30 Marks" }].map(mark => (<div key={mark.label} className="bg-white/5 border border-white/5 rounded-3xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 group hover:bg-white/[0.08] transition-all"><div className="text-center md:text-left"><p className="text-white font-black tracking-tight uppercase text-sm">{mark.label}</p><p className="text-slate-600 text-[10px] font-black uppercase tracking-widest mt-1">{mark.weight}</p></div><div className="flex items-center gap-4"><input type="number" placeholder="00" className="w-24 bg-white/5 border border-white/10 rounded-xl p-4 text-center text-white focus:border-indigo-500/50 font-black text-lg" /><button className="bg-indigo-600 text-white p-4 rounded-xl hover:bg-indigo-500 transition-all shadow-lg active:scale-95"><CheckCheck size={20}/></button></div></div>))}</div></div></AppLayout>} />
+        <Route path="/attendance" element={<AppLayout activeTitle="Attendance Log"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Presence Registry Terminal Online</div></AppLayout>} />
+        <Route path="/freeze" element={<AppLayout activeTitle="Freeze Console"><div className="p-20 text-center bg-amber-600/5 rounded-[40px] text-amber-500 font-black tracking-widest text-xs uppercase tracking-[0.4em] italic underline decoration-amber-500 decoration-2">System Interlock: Terminal Access Freeze Active</div></AppLayout>} />
+        <Route path="/verify" element={<AppLayout activeTitle="Verify Valuation"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Global Audit Chain Verified</div></AppLayout>} />
+        <Route path="/history" element={<AppLayout activeTitle="Audit Logs"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Immutable Ledger Stream Online</div></AppLayout>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <SpeedInsights />
