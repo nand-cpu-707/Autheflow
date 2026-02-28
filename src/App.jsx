@@ -182,11 +182,11 @@ const LoginPage = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Dynamic colors for mesh background based on selected role
+  // Deep dark, Bluish and Violetish environment colors for the mesh
   const portalColors = {
-    Student: { color: "bg-indigo-500/20", glow: "bg-purple-500/15" },
-    Faculty: { color: "bg-emerald-500/20", glow: "bg-teal-500/15" },
-    HOD: { color: "bg-amber-500/20", glow: "bg-orange-500/15" },
+    Student: { color: "bg-blue-600/30", glow: "bg-indigo-600/20" },
+    Faculty: { color: "bg-emerald-600/20", glow: "bg-blue-600/20" },
+    HOD: { color: "bg-violet-600/30", glow: "bg-purple-600/20" },
   };
 
   const handleLogin = async (e) => {
@@ -202,7 +202,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden transition-all duration-1000">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden transition-all duration-1000 bg-[#020617]">
       <AnimatePresence mode="wait">
         {isAdminView ? (
           <motion.div key="admin-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
@@ -210,51 +210,52 @@ const LoginPage = () => {
             <div className="absolute inset-0 backdrop-blur-[12px] bg-black/50" />
           </motion.div>
         ) : (
-          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-white">
-             {/* THE DYNAMIC MESH BACKGROUND FIX */}
-             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
+          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-[#020617]">
+             {/* THE DYNAMIC DARK BLUISH/VIOLETISH MESH BACKGROUND */}
+             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 pointer-events-none" />
              
-             {/* Dynamic glows that change color with activeRole */}
+             {/* Dynamic sapphire and violet glows */}
              <motion.div 
                key={`glow1-${activeRole}`}
                initial={{ opacity: 0, scale: 0.8 }}
-               animate={{ opacity: 1, scale: 1.2 }}
-               transition={{ duration: 1.5, repeat: Infinity, repeatType: "mirror" }}
-               className={`absolute top-[-20%] left-[-10%] w-[80%] h-[80%] ${portalColors[activeRole].color} blur-[150px] rounded-full transition-colors duration-1000`} 
+               animate={{ opacity: 1, scale: 1.3 }}
+               transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
+               className={`absolute top-[-20%] left-[-10%] w-[90%] h-[90%] ${portalColors[activeRole].color} blur-[180px] rounded-full transition-colors duration-1000 shadow-[0_0_100px_rgba(37,99,235,0.2)]`} 
              />
              <motion.div 
                key={`glow2-${activeRole}`}
                initial={{ opacity: 0, scale: 0.8 }}
-               animate={{ opacity: 1, scale: 1.1 }}
-               transition={{ duration: 1.8, repeat: Infinity, repeatType: "mirror", delay: 0.3 }}
-               className={`absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] ${portalColors[activeRole].glow} blur-[150px] rounded-full transition-colors duration-1000`} 
+               animate={{ opacity: 1, scale: 1.2 }}
+               transition={{ duration: 2.5, repeat: Infinity, repeatType: "mirror", delay: 0.5 }}
+               className={`absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] ${portalColors[activeRole].glow} blur-[180px] rounded-full transition-colors duration-1000 shadow-[0_0_100px_rgba(139,92,246,0.2)]`} 
              />
              
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-white via-white/80 to-white opacity-90 pointer-events-none" />
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-indigo-950/20 via-transparent to-purple-950/20 opacity-90 pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.div layout className="relative z-10 w-full max-w-[500px] px-4">
-        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[56px] p-10 lg:p-14 shadow-2xl" : "bg-white/95 backdrop-blur-2xl border-white/60 rounded-[48px] p-10 lg:p-14 shadow-[0_64px_128px_-24px_rgba(99,102,241,0.2)]"}`}>
+        {/* Updated card to dark glassmorphism for a professional look against dark background */}
+        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[56px] p-10 lg:p-14 shadow-2xl" : "bg-white/5 backdrop-blur-3xl border-white/10 rounded-[48px] p-10 lg:p-14 shadow-[0_64px_128px_-24px_rgba(0,0,0,0.8)]"}`}>
           <div className="text-center mb-10">
             {!isAdminView && (
               <div className="flex justify-center mb-8">
-                 <motion.div whileHover={{ rotate: 10, scale: 1.1 }} className="flex items-center gap-3 text-indigo-900 font-black tracking-tighter text-3xl uppercase group cursor-default">
+                 <motion.div whileHover={{ rotate: 10, scale: 1.1 }} className="flex items-center gap-3 text-white font-black tracking-tighter text-3xl uppercase group cursor-default">
                    <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white italic shadow-lg shadow-indigo-600/30 group-hover:shadow-indigo-600/50 transition-all">AF</div>
                    AuthenFlow
                  </motion.div>
               </div>
             )}
-            <h1 className={`text-4xl font-black tracking-tight uppercase italic ${isAdminView ? "text-white" : "text-slate-900 leading-tight"}`}>{isAdminView ? "Admin Login" : "Centralized Portal"}</h1>
-            <p className={`text-[11px] mt-3 font-black uppercase tracking-[0.4em] ${isAdminView ? "text-slate-400" : "text-indigo-600/60"}`}>Authentication Control Layer v4.3</p>
+            <h1 className="text-4xl font-black tracking-tight uppercase italic text-white leading-tight">{isAdminView ? "Admin Login" : "Secure Portal"}</h1>
+            <p className="text-[11px] mt-3 font-black uppercase tracking-[0.4em] text-indigo-400 opacity-80">Authentication Control Layer v4.3</p>
           </div>
 
           {!isAdminView && (
-            <div className="bg-indigo-50/50 p-1.5 rounded-3xl grid grid-cols-3 gap-1 mb-10 border border-indigo-100 shadow-inner">
+            <div className="bg-white/5 p-1.5 rounded-3xl grid grid-cols-3 gap-1 mb-10 border border-white/5 shadow-inner backdrop-blur-md">
               {["Student", "Faculty", "HOD"].map(r => (
-                <button key={r} onClick={() => setActiveRole(r)} className={`relative py-4 rounded-2xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-indigo-600 font-black" : "text-slate-400 font-bold"}`}>
-                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-xl shadow-lg border border-indigo-50" />}
+                <button key={r} onClick={() => setActiveRole(r)} className={`relative py-4 rounded-2xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-white font-black" : "text-slate-500 font-bold"}`}>
+                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/40" />}
                   <span className="relative z-10 text-[11px] font-black uppercase tracking-widest">{r}</span>
                 </button>
               ))}
@@ -263,21 +264,21 @@ const LoginPage = () => {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className={`text-[10px] font-black uppercase tracking-widest ml-2 ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Identity Identifier</label>
+              <label className="text-[10px] font-black uppercase tracking-widest ml-2 text-slate-400">Identity Identifier</label>
               <div className="relative group">
-                 <User className={`absolute left-4 top-1/2 -translate-y-1/2 ${isAdminView ? "text-slate-500" : "text-indigo-300"}`} size={18} />
-                 <input type="text" placeholder="Enter UID Number" value={user} onChange={e => setUser(e.target.value)} className={`w-full p-4.5 pl-12 rounded-2xl text-sm focus:outline-none transition-all shadow-sm ${isAdminView ? "bg-white/5 border-white/10 text-white placeholder:text-slate-600" : "bg-white border border-indigo-100 text-slate-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 placeholder:text-slate-300 font-medium"}`} />
+                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
+                 <input type="text" placeholder="Enter UID Number" value={user} onChange={e => setUser(e.target.value)} className="w-full p-4.5 pl-12 rounded-2xl text-sm focus:outline-none transition-all shadow-sm bg-white/5 border border-white/10 text-white placeholder:text-slate-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-medium" />
               </div>
             </div>
             <div className="space-y-2">
-              <label className={`text-[10px] font-black uppercase tracking-widest ml-2 ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Security Password</label>
+              <label className="text-[10px] font-black uppercase tracking-widest ml-2 text-slate-400">Security Password</label>
               <div className="relative group">
-                 <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 ${isAdminView ? "text-slate-500" : "text-indigo-300"}`} size={18} />
-                 <input type={showPass ? "text" : "password"} placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} className={`w-full p-4.5 pl-12 pr-12 rounded-2xl text-sm focus:outline-none transition-all shadow-sm ${isAdminView ? "bg-white/5 border-white/10 text-white placeholder:text-slate-600" : "bg-white border border-indigo-100 text-slate-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 placeholder:text-slate-300 font-medium"}`} />
-                 <button type="button" onClick={() => setShowPass(!showPass)} className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isAdminView ? "text-slate-500 hover:text-white" : "text-slate-300 hover:text-indigo-600"}`}>{showPass ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
+                 <input type={showPass ? "text" : "password"} placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} className="w-full p-4.5 pl-12 pr-12 rounded-2xl text-sm focus:outline-none transition-all shadow-sm bg-white/5 border border-white/10 text-white placeholder:text-slate-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-medium" />
+                 <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors text-slate-500 hover:text-white">{showPass ? <EyeOff size={16} /> : <Eye size={16} />}</button>
               </div>
             </div>
-            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-600/30" : "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-600/40"}`}>
+            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-600/30" : "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/40"}`}>
               {isAdminView && <div className="absolute inset-0 bg-white/5 -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />}
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? <Loader2 className="animate-spin" size={16}/> : <>Sync & Login Terminal <ChevronRight size={16}/></>}
@@ -285,9 +286,9 @@ const LoginPage = () => {
             </button>
           </form>
 
-          <div className="mt-10 text-center border-t border-slate-100 pt-8">
-            <button onClick={() => setIsAdminView(!isAdminView)} className={`text-[10px] font-black uppercase tracking-widest transition-all px-6 py-2 rounded-full border ${isAdminView ? "text-slate-400 hover:text-white border-white/10 hover:bg-white/5" : "text-indigo-600 hover:text-indigo-800 border-indigo-100 hover:bg-indigo-50"}`}>
-              {isAdminView ? "← Return to Main Portal" : "Access Administrator Node"}
+          <div className="mt-10 text-center border-t border-white/5 pt-8">
+            <button onClick={() => { setIsAdminView(!isAdminView); setActiveRole("Student"); }} className="text-[10px] font-black uppercase tracking-widest transition-all px-6 py-2 rounded-full border text-indigo-400 hover:text-white border-indigo-500/20 hover:bg-indigo-500/10">
+              {isAdminView ? "← Return to Portal" : "Access Administrator Node"}
             </button>
           </div>
         </div>
