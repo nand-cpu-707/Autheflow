@@ -201,9 +201,10 @@ const LoginPage = () => {
             <div className="absolute inset-0 backdrop-blur-[12px] bg-black/50" />
           </motion.div>
         ) : (
-          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-[#f4f7ff]">
+          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
              {/* Enhanced vibrant mesh background logic to match Image 7 & 9 */}
-             <div className="absolute inset-0 bg-[url('https://img.freepik.com/free-vector/dark-gradient-…648f9e31e82827b1f00ebf0921f3100837fd1f3955b&w=740')] opacity-20 pointer-events-none" />
+             <div className="absolute inset-0 bg-[url('https://img.freepik.com/free-vector/dark-gradient-…648f9e31e82827b1f00ebf0921f3100837fd1f3955b&w=740')] bg-cover bg-center grayscale brightness-50 contrast-125" />
+             <div className="absolute inset-0 backdrop-blur-[12px] bg-black/50" />
              
              {/* Radial mesh pulses */}
              <motion.div 
