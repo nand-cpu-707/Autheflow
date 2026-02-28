@@ -11,7 +11,7 @@ import {
   Files, History as HistoryIcon, UploadCloud, MessageSquare, BarChart3, Bell,
   Mail, Phone, Calendar, BookOpen, Award, Users, Building2, FileText,
   Clock, MapPin, Send, RotateCcw, Filter, CheckCheck, Trash2, Search,
-  ExternalLink, ChevronDown, MoreVertical, Timer, FileCheck, Menu, X, Shield, Terminal, PieChart, Briefcase, Activity, Settings, ChevronRight, UserPlus, UserMinus, Snowflake, CheckCircle2, MessageCircle, MonitorDot, LogIn, HardDrive, Cpu, ClipboardCheck, ArrowLeft, Globe
+  ExternalLink, ChevronDown, MoreVertical, Timer, FileCheck, Menu, X, Shield, Terminal, PieChart, Briefcase, Activity, Settings, ChevronRight, UserPlus, UserMinus, Snowflake, CheckCircle2, MessageCircle, MonitorDot, LogIn, HardDrive, Cpu, ClipboardCheck, ArrowLeft, Globe, Zap
 } from 'lucide-react';
 
 // --- DATA CONFIGURATION: 16 GROUPS FOR HOD/ADMIN ---
@@ -79,11 +79,13 @@ const navConfigs = {
   Admin: [
     { label: "Master Panel", icon: <Terminal size={18} />, path: "/admin" },
     { label: "System Monitor", icon: <MonitorDot size={18} />, path: "/admin-monitor" },
-    { label: "Group Registry", icon: <Globe size={18} />, path: "/hod-evaluations" },
-    { label: "Evaluation Hub", icon: <Award size={18} />, path: "/evaluate" },
+    { label: "Cluster Hub", icon: <Globe size={18} />, path: "/group" },
+    { label: "Registry (HOD)", icon: <ClipboardCheck size={18} />, path: "/hod-evaluations" },
+    { label: "Marking (Fac)", icon: <Award size={18} />, path: "/evaluate" },
     { label: "Dept Oversight", icon: <Building2 size={18} />, path: "/hod" },
-    { label: "Security Logs", icon: <HistoryIcon size={18} />, path: "/history" },
-    { label: "Configuration", icon: <Settings size={18} />, path: "/admin" },
+    { label: "Freeze Logic", icon: <Snowflake size={18} />, path: "/freeze" },
+    { label: "Audit Stream", icon: <HistoryIcon size={18} />, path: "/history" },
+    { label: "Config Node", icon: <Settings size={18} />, path: "/admin" },
   ]
 };
 
@@ -180,6 +182,13 @@ const LoginPage = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Dynamic colors for mesh background based on selected role
+  const portalColors = {
+    Student: { color: "bg-indigo-500/20", glow: "bg-purple-500/15" },
+    Faculty: { color: "bg-emerald-500/20", glow: "bg-teal-500/15" },
+    HOD: { color: "bg-amber-500/20", glow: "bg-orange-500/15" },
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const currentRole = isAdminView ? "Admin" : activeRole;
@@ -193,7 +202,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden transition-colors duration-700">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden transition-all duration-1000">
       <AnimatePresence mode="wait">
         {isAdminView ? (
           <motion.div key="admin-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
@@ -201,25 +210,27 @@ const LoginPage = () => {
             <div className="absolute inset-0 backdrop-blur-[12px] bg-black/50" />
           </motion.div>
         ) : (
-          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
-             {/* Enhanced vibrant mesh background logic to match Image 7 & 9 */}
-             <div className="absolute inset-0 bg-[url('https://img.freepik.com/free-vector/dark-gradient-…648f9e31e82827b1f00ebf0921f3100837fd1f3955b&w=740')] bg-cover bg-center grayscale brightness-50 contrast-125" />
-             <div className="absolute inset-0 backdrop-blur-[12px] bg-black/50" />
+          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-white">
+             {/* THE DYNAMIC MESH BACKGROUND FIX */}
+             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
              
-             {/* Radial mesh pulses */}
+             {/* Dynamic glows that change color with activeRole */}
              <motion.div 
-               animate={{ scale: [1, 1.2, 1], x: [0, 100, 0] }}
-               transition={{ duration: 15, repeat: Infinity }}
-               className="absolute top-[-20%] left-[-10%] w-[80%] h-[80%] bg-indigo-500/10 blur-[150px] rounded-full" 
+               key={`glow1-${activeRole}`}
+               initial={{ opacity: 0, scale: 0.8 }}
+               animate={{ opacity: 1, scale: 1.2 }}
+               transition={{ duration: 1.5, repeat: Infinity, repeatType: "mirror" }}
+               className={`absolute top-[-20%] left-[-10%] w-[80%] h-[80%] ${portalColors[activeRole].color} blur-[150px] rounded-full transition-colors duration-1000`} 
              />
              <motion.div 
-               animate={{ scale: [1.2, 1, 1.2], x: [0, -80, 0] }}
-               transition={{ duration: 12, repeat: Infinity }}
-               className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-purple-500/10 blur-[150px] rounded-full" 
+               key={`glow2-${activeRole}`}
+               initial={{ opacity: 0, scale: 0.8 }}
+               animate={{ opacity: 1, scale: 1.1 }}
+               transition={{ duration: 1.8, repeat: Infinity, repeatType: "mirror", delay: 0.3 }}
+               className={`absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] ${portalColors[activeRole].glow} blur-[150px] rounded-full transition-colors duration-1000`} 
              />
              
-             {/* The soft white/lavender overlay for the "AuthenFlow" feel */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-indigo-50 via-white/80 to-purple-50 opacity-90 pointer-events-none" />
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-white via-white/80 to-white opacity-90 pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -266,7 +277,7 @@ const LoginPage = () => {
                  <button type="button" onClick={() => setShowPass(!showPass)} className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isAdminView ? "text-slate-500 hover:text-white" : "text-slate-300 hover:text-indigo-600"}`}>{showPass ? <EyeOff size={16} /> : <Eye size={16} />}</button>
               </div>
             </div>
-            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-600/30" : "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/40"}`}>
+            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-600/30" : "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-600/40"}`}>
               {isAdminView && <div className="absolute inset-0 bg-white/5 -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />}
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? <Loader2 className="animate-spin" size={16}/> : <>Sync & Login Terminal <ChevronRight size={16}/></>}
@@ -275,7 +286,7 @@ const LoginPage = () => {
           </form>
 
           <div className="mt-10 text-center border-t border-slate-100 pt-8">
-            <button onClick={() => setIsAdminView(!isAdminView)} className={`text-[11px] font-black uppercase tracking-widest transition-all px-6 py-2 rounded-full border ${isAdminView ? "text-slate-400 hover:text-white border-white/10 hover:bg-white/5" : "text-indigo-600 hover:text-indigo-800 border-indigo-100 hover:bg-indigo-50"}`}>
+            <button onClick={() => setIsAdminView(!isAdminView)} className={`text-[10px] font-black uppercase tracking-widest transition-all px-6 py-2 rounded-full border ${isAdminView ? "text-slate-400 hover:text-white border-white/10 hover:bg-white/5" : "text-indigo-600 hover:text-indigo-800 border-indigo-100 hover:bg-indigo-50"}`}>
               {isAdminView ? "← Return to Main Portal" : "Access Administrator Node"}
             </button>
           </div>
