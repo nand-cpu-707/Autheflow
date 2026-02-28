@@ -14,7 +14,7 @@ import {
   ExternalLink, ChevronDown, MoreVertical, Timer, FileCheck, Menu, X, Shield, Terminal, PieChart, Briefcase, Activity, Settings, ChevronRight, UserPlus, UserMinus, Snowflake, CheckCircle2, MessageCircle, MonitorDot, LogIn, HardDrive, Cpu, ClipboardCheck, ArrowLeft, Globe
 } from 'lucide-react';
 
-// --- DATA CONFIGURATION: 16 GROUPS ---
+// --- DATA CONFIGURATION: 16 GROUPS FOR HOD/ADMIN ---
 const groupData = Array.from({ length: 16 }, (_, i) => ({
   id: `GRP-24-${(i + 1).toString().padStart(2, '0')}`,
   title: [
@@ -82,7 +82,8 @@ const navConfigs = {
     { label: "Group Registry", icon: <Globe size={18} />, path: "/hod-evaluations" },
     { label: "Evaluation Hub", icon: <Award size={18} />, path: "/evaluate" },
     { label: "Dept Oversight", icon: <Building2 size={18} />, path: "/hod" },
-    { label: "Security Logs", icon: <HistoryIcon size={18} />, path: "/history" },
+    { label: "Freeze Ops", icon: <Snowflake size={18} />, path: "/freeze" },
+    { label: "Audit Logs", icon: <HistoryIcon size={18} />, path: "/history" },
     { label: "Configuration", icon: <Settings size={18} />, path: "/admin" },
   ]
 };
@@ -193,41 +194,43 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden transition-colors duration-700">
       <AnimatePresence mode="wait">
         {isAdminView ? (
           <motion.div key="admin-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069')] bg-cover bg-center grayscale brightness-50" />
-            <div className="absolute inset-0 backdrop-blur-[10px] bg-black/40" />
+            <div className="absolute inset-0 backdrop-blur-[12px] bg-black/40" />
           </motion.div>
         ) : (
-          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-white z-0">
-             <div className="absolute top-0 right-0 w-full h-full opacity-5 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none" />
-             <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/5 blur-[120px] rounded-full" />
+          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-[#f8fafc]">
+             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 pointer-events-none" />
+             <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-indigo-500/10 blur-[140px] rounded-full animate-pulse" />
+             <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-purple-500/10 blur-[140px] rounded-full animate-pulse" />
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-white via-indigo-50/20 to-white pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div layout className="relative z-10 w-full max-w-[480px] px-4">
-        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[48px] p-10 lg:p-14 shadow-2xl" : "bg-white border-slate-200 rounded-[40px] p-10 lg:p-14 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)]"}`}>
+      <motion.div layout className="relative z-10 w-full max-w-[500px] px-4">
+        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[48px] p-10 lg:p-14 shadow-2xl" : "bg-white/80 backdrop-blur-2xl border-white/60 rounded-[40px] p-10 lg:p-14 shadow-[0_48px_80px_-16px_rgba(99,102,241,0.15)]"}`}>
           <div className="text-center mb-10">
             {!isAdminView && (
               <div className="flex justify-center mb-6">
-                 <div className="flex items-center gap-2 text-indigo-900 font-black tracking-tighter text-2xl uppercase">
-                   <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white italic">AF</div>
+                 <motion.div whileHover={{ rotate: 10, scale: 1.1 }} className="flex items-center gap-3 text-indigo-900 font-black tracking-tighter text-2xl uppercase group cursor-default">
+                   <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white italic shadow-lg shadow-indigo-600/30">AF</div>
                    AuthenFlow
-                 </div>
+                 </motion.div>
               </div>
             )}
-            <h1 className={`text-3xl font-black tracking-tight uppercase italic ${isAdminView ? "text-white" : "text-slate-900"}`}>{isAdminView ? "Admin Login" : "Centralized Portal"}</h1>
-            <p className={`text-[10px] mt-2 font-black uppercase tracking-[0.3em] ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Authentication Gateway Layer</p>
+            <h1 className={`text-4xl font-black tracking-tight uppercase italic ${isAdminView ? "text-white" : "text-slate-900"}`}>{isAdminView ? "Admin Login" : "Centralized Portal"}</h1>
+            <p className={`text-[11px] mt-3 font-black uppercase tracking-[0.4em] ${isAdminView ? "text-slate-400" : "text-indigo-600/60"}`}>Authentication Layer v4.3</p>
           </div>
 
           {!isAdminView && (
-            <div className="bg-slate-100 p-1 rounded-2xl grid grid-cols-3 gap-1 mb-8 border border-slate-200">
+            <div className="bg-indigo-50/50 p-1.5 rounded-2xl grid grid-cols-3 gap-1 mb-10 border border-indigo-100 shadow-inner">
               {["Student", "Faculty", "HOD"].map(r => (
-                <button key={r} onClick={() => setActiveRole(r)} className={`relative py-3.5 rounded-xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-indigo-600" : "text-slate-400"}`}>
-                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-xl shadow-md border border-slate-100" />}
+                <button key={r} onClick={() => setActiveRole(r)} className={`relative py-3.5 rounded-xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-indigo-600 font-black" : "text-slate-400 font-bold"}`}>
+                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-xl shadow-lg border border-indigo-50" />}
                   <span className="relative z-10 text-[10px] font-black uppercase tracking-widest">{r}</span>
                 </button>
               ))}
@@ -236,22 +239,27 @@ const LoginPage = () => {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isAdminView ? "text-slate-400" : "text-slate-600"}`}>Account Identifier</label>
-              <input type="text" placeholder="Enter UID" value={user} onChange={e => setUser(e.target.value)} className={`w-full p-4.5 rounded-2xl text-sm focus:outline-none transition-all ${isAdminView ? "bg-white/5 border-white/10 text-white" : "bg-slate-50 border border-slate-200 text-slate-900 focus:border-indigo-500"}`} />
+              <label className={`text-[10px] font-black uppercase tracking-widest ml-2 ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Identity UID</label>
+              <input type="text" placeholder="Enter UID Number" value={user} onChange={e => setUser(e.target.value)} className={`w-full p-4.5 rounded-2xl text-sm focus:outline-none transition-all shadow-sm ${isAdminView ? "bg-white/5 border-white/10 text-white placeholder:text-slate-600" : "bg-white border border-indigo-100 text-slate-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 placeholder:text-slate-400"}`} />
             </div>
             <div className="space-y-2">
-              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isAdminView ? "text-slate-400" : "text-slate-600"}`}>System Access Key</label>
-              <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} className={`w-full p-4.5 rounded-2xl text-sm focus:outline-none transition-all ${isAdminView ? "bg-white/5 border-white/10 text-white" : "bg-slate-50 border border-slate-200 text-slate-900 focus:border-indigo-500"}`} />
+              <label className={`text-[10px] font-black uppercase tracking-widest ml-2 ${isAdminView ? "text-slate-400" : "text-slate-500"}`}>Account Password</label>
+              <div className="relative">
+                 <input type={showPass ? "text" : "password"} placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} className={`w-full p-4.5 rounded-2xl text-sm focus:outline-none transition-all shadow-sm ${isAdminView ? "bg-white/5 border-white/10 text-white placeholder:text-slate-600" : "bg-white border border-indigo-100 text-slate-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 placeholder:text-slate-400"}`} />
+                 <button type="button" onClick={() => setShowPass(!showPass)} className={`absolute right-4 top-1/2 -translate-y-1/2 transition-colors ${isAdminView ? "text-slate-500 hover:text-white" : "text-slate-300 hover:text-indigo-600"}`}>{showPass ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+              </div>
             </div>
-            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500" : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-indigo-500/20"}`}>
+            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}>
               {isAdminView && <div className="absolute inset-0 bg-white/5 -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />}
-              <span className="relative z-10">{loading ? "Synchronizing..." : "Initiate Entry"}</span>
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {loading ? <Loader2 className="animate-spin" size={16}/> : <>Sync & Login <ChevronRight size={16}/></>}
+              </span>
             </button>
           </form>
 
-          <div className="mt-8 text-center border-t border-slate-100 pt-6">
-            <button onClick={() => setIsAdminView(!isAdminView)} className={`text-[10px] font-black uppercase tracking-widest ${isAdminView ? "text-slate-400 hover:text-white" : "text-indigo-600 hover:text-indigo-800"}`}>
-              {isAdminView ? "← Return to Portal" : "Administrator Terminal"}
+          <div className="mt-10 text-center border-t border-slate-100 pt-8">
+            <button onClick={() => setIsAdminView(!isAdminView)} className={`text-[10px] font-black uppercase tracking-widest transition-all ${isAdminView ? "text-slate-400 hover:text-white" : "text-indigo-600 hover:text-indigo-800"}`}>
+              {isAdminView ? "← Return to User Portal" : "Administrator Terminal"}
             </button>
           </div>
         </div>
@@ -260,7 +268,7 @@ const LoginPage = () => {
   );
 };
 
-// --- HOD GROUP EVALUATIONS ---
+// --- HOD/ADMIN GROUP EVALUATIONS ---
 const GroupEvaluations = () => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [search, setSearch] = useState("");
@@ -335,8 +343,7 @@ const GroupEvaluations = () => {
   );
 };
 
-// --- REMAINING COMPONENTS ---
-
+// --- ADMIN DASHBOARD ---
 const AdminDashboard = () => {
   const activities = [
     { u: "Anandhu Sebastian", a: "Uploaded Literature Review", t: "2 mins ago", r: "Student" },
@@ -387,6 +394,7 @@ const AdminDashboard = () => {
   );
 };
 
+// --- STUDENT DASHBOARD ---
 const StudentDashboard = () => (
   <AppLayout activeTitle="Dashboard">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -394,7 +402,7 @@ const StudentDashboard = () => (
         <div className="relative z-10 flex flex-col sm:flex-row items-center gap-8 text-center sm:text-left">
           <div className="w-28 h-28 rounded-[35px] bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center text-5xl font-black text-white shadow-2xl">{studentInfo.name[0]}</div>
           <div>
-            <h2 className="text-3xl lg:text-4xl font-black text-white tracking-tighter leading-none uppercase italic">{studentInfo.name}</h2>
+            <h2 className="text-3xl font-black text-white tracking-tighter leading-none uppercase italic">{studentInfo.name}</h2>
             <p className="text-indigo-100/70 text-xs font-black uppercase tracking-[0.2em] mt-3">{studentInfo.department}</p>
             <div className="flex gap-2 mt-6">
                <span className="bg-white/10 px-3 py-1.5 rounded-full text-[9px] font-black text-white uppercase border border-white/5">Node ID: {studentInfo.uid}</span>
@@ -427,21 +435,32 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        
+        {/* Admin Specific */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin-monitor" element={<AdminDashboard />} />
+
+        {/* HOD Specific */}
         <Route path="/hod" element={<AppLayout activeTitle="Global View"><div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">{[{ l: "Dept Health", v: "Optimal", c: "emerald" }, { l: "Active Groups", v: "16 Nodes", c: "amber" }, { l: "Pending Audit", v: "04 Logs", c: "rose" }].map(s => (<div key={s.l} className="bg-white/5 border border-white/10 p-8 rounded-[32px] group hover:bg-white/[0.08] transition-all"><p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mb-3">{s.l}</p><p className="text-3xl font-black text-white uppercase italic">{s.v}</p></div>))}</div><div className="bg-white/5 border border-white/10 rounded-[40px] p-20 text-center border-dashed border-2"><Activity size={40} className="mx-auto text-slate-600 mb-6 animate-pulse opacity-30" /><p className="text-slate-600 font-black text-xs uppercase tracking-[0.5em] italic">Streaming Batch Intelligence Node Active</p></div></AppLayout>} />
         <Route path="/hod-evaluations" element={<GroupEvaluations />} />
+        <Route path="/freeze" element={<AppLayout activeTitle="Freeze Console"><div className="p-20 text-center bg-amber-600/5 rounded-[40px] text-amber-500 font-black tracking-widest text-xs uppercase tracking-[0.4em] italic underline decoration-amber-500 decoration-2">System Interlock: Terminal Access Freeze Active</div></AppLayout>} />
+        <Route path="/verify" element={<AppLayout activeTitle="Verify Valuation"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Global Audit Chain Verified</div></AppLayout>} />
+
+        {/* Student Routes */}
         <Route path="/profile" element={<StudentDashboard />} />
         <Route path="/group" element={<AppLayout activeTitle="Allotted Group"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Node Cluster: {studentInfo.group} • Guide ID: {studentInfo.guide}</div></AppLayout>} />
         <Route path="/status" element={<AppLayout activeTitle="My Status"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em] italic">Current Sync: {studentInfo.uploadStatus}</div></AppLayout>} />
         <Route path="/query" element={<AppLayout activeTitle="Raise Query"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Communication Port Ready</div></AppLayout>} />
+
+        {/* Faculty Routes */}
         <Route path="/faculty" element={<AppLayout activeTitle="Faculty Terminal"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Faculty Performance Analytics</div></AppLayout>} />
         <Route path="/faculty-groups" element={<AppLayout activeTitle="Assigned Groups"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Active Cluster Registry Online</div></AppLayout>} />
         <Route path="/evaluate" element={<AppLayout activeTitle="Evaluation System"><div className="bg-white/5 border border-white/10 rounded-[40px] p-10 lg:p-14 shadow-2xl"><div className="mb-10 border-b border-white/5 pb-8"><h4 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase italic">Assessment Node: A-12</h4><p className="text-slate-500 text-[10px] font-black tracking-widest uppercase opacity-60">Continuous Valuation Flow • Semester IV</p></div><div className="space-y-4">{[{ label: "Seminar 1", weight: "20 Marks" }, { label: "Seminar 2", weight: "20 Marks" }, { label: "Outcome (Paper)", weight: "30 Marks" }, { label: "Performance", weight: "30 Marks" }].map(mark => (<div key={mark.label} className="bg-white/5 border border-white/5 rounded-3xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 group hover:bg-white/[0.08] transition-all"><div className="text-center md:text-left"><p className="text-white font-black tracking-tight uppercase text-sm">{mark.label}</p><p className="text-slate-600 text-[10px] font-black uppercase tracking-widest mt-1">{mark.weight}</p></div><div className="flex items-center gap-4"><input type="number" placeholder="00" className="w-24 bg-white/5 border border-white/10 rounded-xl p-4 text-center text-white focus:border-indigo-500/50 font-black text-lg" /><button className="bg-indigo-600 text-white p-4 rounded-xl hover:bg-indigo-500 transition-all shadow-lg active:scale-95"><CheckCheck size={20}/></button></div></div>))}</div></div></AppLayout>} />
         <Route path="/attendance" element={<AppLayout activeTitle="Attendance Log"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Presence Registry Terminal Online</div></AppLayout>} />
-        <Route path="/freeze" element={<AppLayout activeTitle="Freeze Console"><div className="p-20 text-center bg-amber-600/5 rounded-[40px] text-amber-500 font-black tracking-widest text-xs uppercase tracking-[0.4em] italic underline decoration-amber-500 decoration-2">System Interlock: Terminal Access Freeze Active</div></AppLayout>} />
-        <Route path="/verify" element={<AppLayout activeTitle="Verify Valuation"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Global Audit Chain Verified</div></AppLayout>} />
+
+        {/* Global Audit */}
         <Route path="/history" element={<AppLayout activeTitle="Audit Logs"><div className="p-20 text-center border-dashed border-2 rounded-[40px] text-slate-600 font-black tracking-widest text-xs uppercase tracking-[0.4em]">Immutable Ledger Stream Online</div></AppLayout>} />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <SpeedInsights />
