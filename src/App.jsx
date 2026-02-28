@@ -82,8 +82,7 @@ const navConfigs = {
     { label: "Group Registry", icon: <Globe size={18} />, path: "/hod-evaluations" },
     { label: "Evaluation Hub", icon: <Award size={18} />, path: "/evaluate" },
     { label: "Dept Oversight", icon: <Building2 size={18} />, path: "/hod" },
-    { label: "Freeze Ops", icon: <Snowflake size={18} />, path: "/freeze" },
-    { label: "Audit Logs", icon: <HistoryIcon size={18} />, path: "/history" },
+    { label: "Security Logs", icon: <HistoryIcon size={18} />, path: "/history" },
     { label: "Configuration", icon: <Settings size={18} />, path: "/admin" },
   ]
 };
@@ -203,17 +202,29 @@ const LoginPage = () => {
           </motion.div>
         ) : (
           <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-[#f4f7ff]">
-             {/* Dynamic Mesh Background for User Portal */}
+             {/* Enhanced vibrant mesh background logic to match Image 7 & 9 */}
              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
-             <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[80%] bg-indigo-500/20 blur-[150px] rounded-full animate-pulse" />
-             <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-purple-500/15 blur-[150px] rounded-full animate-pulse" />
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-white via-indigo-50/40 to-white opacity-80 pointer-events-none" />
+             
+             {/* Radial mesh pulses */}
+             <motion.div 
+               animate={{ scale: [1, 1.2, 1], x: [0, 100, 0] }}
+               transition={{ duration: 15, repeat: Infinity }}
+               className="absolute top-[-20%] left-[-10%] w-[80%] h-[80%] bg-indigo-500/10 blur-[150px] rounded-full" 
+             />
+             <motion.div 
+               animate={{ scale: [1.2, 1, 1.2], x: [0, -80, 0] }}
+               transition={{ duration: 12, repeat: Infinity }}
+               className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-purple-500/10 blur-[150px] rounded-full" 
+             />
+             
+             {/* The soft white/lavender overlay for the "AuthenFlow" feel */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-indigo-50 via-white/80 to-purple-50 opacity-90 pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.div layout className="relative z-10 w-full max-w-[500px] px-4">
-        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[56px] p-10 lg:p-14 shadow-2xl" : "bg-white/90 backdrop-blur-2xl border-white/60 rounded-[48px] p-10 lg:p-14 shadow-[0_64px_128px_-24px_rgba(99,102,241,0.2)]"}`}>
+        <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[56px] p-10 lg:p-14 shadow-2xl" : "bg-white/95 backdrop-blur-2xl border-white/60 rounded-[48px] p-10 lg:p-14 shadow-[0_64px_128px_-24px_rgba(99,102,241,0.2)]"}`}>
           <div className="text-center mb-10">
             {!isAdminView && (
               <div className="flex justify-center mb-8">
@@ -231,7 +242,7 @@ const LoginPage = () => {
             <div className="bg-indigo-50/50 p-1.5 rounded-3xl grid grid-cols-3 gap-1 mb-10 border border-indigo-100 shadow-inner">
               {["Student", "Faculty", "HOD"].map(r => (
                 <button key={r} onClick={() => setActiveRole(r)} className={`relative py-4 rounded-2xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-indigo-600 font-black" : "text-slate-400 font-bold"}`}>
-                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-2xl shadow-lg border border-indigo-50" />}
+                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-white rounded-xl shadow-lg border border-indigo-50" />}
                   <span className="relative z-10 text-[11px] font-black uppercase tracking-widest">{r}</span>
                 </button>
               ))}
