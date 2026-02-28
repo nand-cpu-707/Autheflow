@@ -14,7 +14,7 @@ import {
   ExternalLink, ChevronDown, MoreVertical, Timer, FileCheck, Menu, X, Shield, Terminal, PieChart, Briefcase, Activity, Settings, ChevronRight, UserPlus, UserMinus, Snowflake, CheckCircle2, MessageCircle, MonitorDot, LogIn, HardDrive, Cpu, ClipboardCheck, ArrowLeft, Globe, Zap
 } from 'lucide-react';
 
-// --- DATA CONFIGURATION: 16 GROUPS FOR HOD/ADMIN ---
+// --- DATA CONFIGURATION ---
 const groupData = Array.from({ length: 16 }, (_, i) => ({
   id: `GRP-24-${(i + 1).toString().padStart(2, '0')}`,
   title: [
@@ -96,7 +96,25 @@ const roleThemes = {
   Admin: { color: "text-rose-400", border: "border-rose-500/20", grad: "from-rose-500 to-red-600" },
 };
 
-const spring = { type: "spring", stiffness: 300, damping: 30 };
+// --- ANIMATION CONSTANTS ---
+const spring = { type: "spring", stiffness: 350, damping: 35 };
+const pageTransition = { 
+  initial: { opacity: 0, scale: 0.98, y: 10 },
+  animate: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 1.02, y: -10 },
+  transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+};
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 }
+  }
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: spring }
+};
 
 // --- SHARED LAYOUT ---
 const AppLayout = ({ children, activeTitle }) => {
@@ -112,11 +130,7 @@ const AppLayout = ({ children, activeTitle }) => {
   return (
     <div className="flex min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       <div className="fixed inset-0 pointer-events-none z-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-indigo-600/5 blur-[120px] rounded-full" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[70%] h-[70%] bg-purple-600/5 blur-[120px] rounded-full" />
-      </div>
-
+      
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMobileOpen(false)} className="fixed inset-0 bg-black/70 backdrop-blur-md z-[80] lg:hidden" />
@@ -126,8 +140,8 @@ const AppLayout = ({ children, activeTitle }) => {
       <aside className={`fixed left-0 top-0 h-screen w-72 bg-[#020617]/95 backdrop-blur-3xl border-r border-white/5 z-[90] flex flex-col transition-transform duration-500 ${isMobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"} lg:translate-x-0`}>
         <div className="p-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className={`w-10 h-10 bg-gradient-to-br ${theme.grad} rounded-xl flex items-center justify-center text-white font-black italic shadow-lg uppercase`}>{role[0]}</div>
-            <span className="text-white font-black text-xl tracking-tighter uppercase tracking-widest">AuthenFlow</span>
+            <motion.div whileHover={{ rotate: 10 }} className={`w-10 h-10 bg-gradient-to-br ${theme.grad} rounded-xl flex items-center justify-center text-white font-black italic shadow-lg uppercase`}>{role[0]}</motion.div>
+            <span className="text-white font-black text-xl tracking-tighter uppercase">AuthenFlow</span>
           </div>
           <button onClick={() => setIsMobileOpen(false)} className="lg:hidden text-slate-400"><X size={24} /></button>
         </div>
@@ -143,29 +157,33 @@ const AppLayout = ({ children, activeTitle }) => {
           </LayoutGroup>
         </nav>
         <div className="p-6">
-          <button onClick={() => { localStorage.removeItem('userRole'); navigate("/"); }} className="w-full bg-white/5 border border-white/10 text-slate-400 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-500/10 hover:text-red-400 transition-all">
+          <motion.button whileTap={{ scale: 0.95 }} onClick={() => { localStorage.removeItem('userRole'); navigate("/"); }} className="w-full bg-white/5 border border-white/10 text-slate-400 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-500/10 hover:text-red-400 transition-all">
             <LogOut size={16} /> Logout System
-          </button>
+          </motion.button>
         </div>
       </aside>
 
       <main className="flex-1 lg:ml-72 min-h-screen p-5 lg:p-10 relative z-10 flex flex-col">
         <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 lg:mb-12 gap-6">
           <div className="flex items-center gap-4">
-            <button onClick={() => setIsMobileOpen(true)} className="lg:hidden w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-slate-300 shadow-xl"><Menu size={24} /></button>
+            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsMobileOpen(true)} className="lg:hidden w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-slate-300 shadow-xl"><Menu size={24} /></motion.button>
             <div>
-              <h1 className="text-2xl lg:text-3xl font-black text-white tracking-tight leading-none uppercase italic">{activeTitle}</h1>
+              <motion.h1 initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={spring} className="text-2xl lg:text-3xl font-black text-white tracking-tight leading-none uppercase italic">{activeTitle}</motion.h1>
               <div className="flex items-center gap-2 mt-2">
                 <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded border ${theme.color} ${theme.border}`}>{role} ACCESS</span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 group cursor-pointer hover:bg-white/10 transition-all"><Bell size={18} /></div>
+            <div className="h-11 w-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 cursor-pointer hover:bg-white/10 transition-all"><Bell size={18} /></div>
             <div className={`h-11 w-11 rounded-2xl bg-gradient-to-br ${theme.grad} flex items-center justify-center text-white font-black text-sm shadow-xl uppercase italic`}>{role === 'Student' ? studentInfo.name[0] : role[0]}</div>
           </div>
         </header>
-        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="flex-1">{children}</motion.div>
+        
+        <motion.div {...pageTransition} className="flex-1">
+          {children}
+        </motion.div>
+
         <footer className="mt-12 lg:mt-20 pt-8 border-t border-white/5 text-center text-slate-700 text-[9px] font-black uppercase tracking-[0.5em]">Academic Integrity Engine • AuthenFlow Secured</footer>
       </main>
     </div>
@@ -182,11 +200,10 @@ const LoginPage = () => {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Deep dark, Bluish and Violetish environment colors for the mesh
   const portalColors = {
-    Student: { color: "bg-blue-600/30", glow: "bg-indigo-600/20" },
-    Faculty: { color: "bg-emerald-600/20", glow: "bg-blue-600/20" },
-    HOD: { color: "bg-violet-600/30", glow: "bg-purple-600/20" },
+    Student: { color: "rgba(37, 99, 235, 0.15)", glow: "rgba(139, 92, 246, 0.1)" },
+    Faculty: { color: "rgba(16, 185, 129, 0.15)", glow: "rgba(59, 130, 246, 0.1)" },
+    HOD: { color: "rgba(139, 92, 246, 0.15)", glow: "rgba(245, 158, 11, 0.1)" },
   };
 
   const handleLogin = async (e) => {
@@ -202,7 +219,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden transition-all duration-1000 bg-[#020617]">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#020617]">
       <AnimatePresence mode="wait">
         {isAdminView ? (
           <motion.div key="admin-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
@@ -210,33 +227,29 @@ const LoginPage = () => {
             <div className="absolute inset-0 backdrop-blur-[12px] bg-black/50" />
           </motion.div>
         ) : (
-          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0 bg-[#020617]">
-             {/* THE DYNAMIC DARK BLUISH/VIOLETISH MESH BACKGROUND */}
+          <motion.div key="user-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-0">
              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-30 pointer-events-none" />
-             
-             {/* Dynamic sapphire and violet glows */}
              <motion.div 
                key={`glow1-${activeRole}`}
                initial={{ opacity: 0, scale: 0.8 }}
                animate={{ opacity: 1, scale: 1.3 }}
-               transition={{ duration: 2, repeat: Infinity, repeatType: "mirror" }}
-               className={`absolute top-[-20%] left-[-10%] w-[90%] h-[90%] ${portalColors[activeRole].color} blur-[180px] rounded-full transition-colors duration-1000 shadow-[0_0_100px_rgba(37,99,235,0.2)]`} 
+               transition={{ duration: 3, repeat: Infinity, repeatType: "mirror" }}
+               style={{ backgroundColor: portalColors[activeRole].color }}
+               className="absolute top-[-20%] left-[-10%] w-[90%] h-[90%] blur-[180px] rounded-full transition-colors duration-1000" 
              />
              <motion.div 
                key={`glow2-${activeRole}`}
                initial={{ opacity: 0, scale: 0.8 }}
                animate={{ opacity: 1, scale: 1.2 }}
-               transition={{ duration: 2.5, repeat: Infinity, repeatType: "mirror", delay: 0.5 }}
-               className={`absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] ${portalColors[activeRole].glow} blur-[180px] rounded-full transition-colors duration-1000 shadow-[0_0_100px_rgba(139,92,246,0.2)]`} 
+               transition={{ duration: 4, repeat: Infinity, repeatType: "mirror", delay: 0.5 }}
+               style={{ backgroundColor: portalColors[activeRole].glow }}
+               className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] blur-[180px] rounded-full transition-colors duration-1000" 
              />
-             
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-indigo-950/20 via-transparent to-purple-950/20 opacity-90 pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div layout className="relative z-10 w-full max-w-[500px] px-4">
-        {/* Updated card to dark glassmorphism for a professional look against dark background */}
+      <motion.div layout transition={spring} className="relative z-10 w-full max-w-[500px] px-4">
         <div className={`transition-all duration-500 border ${isAdminView ? "bg-white/5 backdrop-blur-3xl border-white/20 rounded-[56px] p-10 lg:p-14 shadow-2xl" : "bg-white/5 backdrop-blur-3xl border-white/10 rounded-[48px] p-10 lg:p-14 shadow-[0_64px_128px_-24px_rgba(0,0,0,0.8)]"}`}>
           <div className="text-center mb-10">
             {!isAdminView && (
@@ -255,7 +268,7 @@ const LoginPage = () => {
             <div className="bg-white/5 p-1.5 rounded-3xl grid grid-cols-3 gap-1 mb-10 border border-white/5 shadow-inner backdrop-blur-md">
               {["Student", "Faculty", "HOD"].map(r => (
                 <button key={r} onClick={() => setActiveRole(r)} className={`relative py-4 rounded-2xl transition-all flex flex-col items-center gap-1 ${activeRole === r ? "text-white font-black" : "text-slate-500 font-bold"}`}>
-                  {activeRole === r && <motion.div layoutId="roleIndicator" className="absolute inset-0 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/40" />}
+                  {activeRole === r && <motion.div layoutId="roleIndicator" transition={spring} className="absolute inset-0 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-600/40" />}
                   <span className="relative z-10 text-[11px] font-black uppercase tracking-widest">{r}</span>
                 </button>
               ))}
@@ -278,12 +291,12 @@ const LoginPage = () => {
                  <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors text-slate-500 hover:text-white">{showPass ? <EyeOff size={16} /> : <Eye size={16} />}</button>
               </div>
             </div>
-            <button type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white hover:bg-indigo-500 shadow-indigo-600/30" : "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-500/40"}`}>
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.25em] text-[11px] shadow-2xl transition-all relative overflow-hidden group ${isAdminView ? "bg-indigo-600 text-white shadow-indigo-600/30" : "bg-indigo-600 text-white shadow-indigo-500/40"}`}>
               {isAdminView && <div className="absolute inset-0 bg-white/5 -skew-x-12 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />}
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? <Loader2 className="animate-spin" size={16}/> : <>Sync & Login Terminal <ChevronRight size={16}/></>}
               </span>
-            </button>
+            </motion.button>
           </form>
 
           <div className="mt-10 text-center border-t border-white/5 pt-8">
@@ -309,23 +322,23 @@ const GroupEvaluations = () => {
   );
 
   return (
-    <AppLayout activeTitle="Cluster Evaluations">
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
       <AnimatePresence mode="wait">
         {!selectedGroup ? (
-          <motion.div key="list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+          <motion.div key="list" variants={pageTransition} initial="initial" animate="animate" exit="exit">
             <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
                <div className="relative w-full md:w-96">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={18} />
-                  <input type="text" placeholder="Filter by Group ID, Guide or Project..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-12 text-sm text-white focus:border-amber-500/50 outline-none transition-all shadow-inner" />
+                  <input type="text" placeholder="Filter by ID or Project..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-12 text-sm text-white focus:border-amber-500/50 outline-none transition-all shadow-inner" />
                </div>
                <div className="flex gap-3">
-                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center shadow-xl"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Batches</p><p className="text-xl font-black text-white uppercase italic">16 Clusters</p></div>
-                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center shadow-xl"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Audit Ready</p><p className="text-xl font-black text-emerald-400 uppercase italic">09/16</p></div>
+                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center shadow-xl"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Total</p><p className="text-xl font-black text-white italic">16 Groups</p></div>
+                  <div className="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center shadow-xl"><p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Evaluated</p><p className="text-xl font-black text-emerald-400 italic">09/16</p></div>
                </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               {filteredGroups.map((group) => (
-                <motion.div key={group.id} whileHover={{ y: -5, scale: 1.02, backgroundColor: "rgba(255,255,255,0.06)" }} onClick={() => setSelectedGroup(group)} className="bg-white/5 border border-white/10 rounded-[32px] p-8 cursor-pointer transition-all group overflow-hidden relative shadow-2xl">
+                <motion.div key={group.id} variants={itemVariants} whileHover={{ y: -5, scale: 1.02 }} onClick={() => setSelectedGroup(group)} className="bg-white/5 border border-white/10 rounded-[32px] p-8 cursor-pointer transition-all group overflow-hidden relative shadow-2xl">
                   <div className="flex justify-between items-start mb-6">
                     <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em]">{group.id}</span>
                     <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-tighter ${group.status === 'Verified' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>{group.status}</div>
@@ -340,27 +353,24 @@ const GroupEvaluations = () => {
             </div>
           </motion.div>
         ) : (
-          <motion.div key="detail" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} className="bg-white/5 border border-white/10 rounded-[48px] p-10 lg:p-16 shadow-2xl relative overflow-hidden">
-            <button onClick={() => setSelectedGroup(null)} className="mb-12 flex items-center gap-2 text-slate-500 hover:text-white transition-all text-[11px] font-black uppercase tracking-[0.3em] hover:tracking-[0.4em]"><ArrowLeft size={16}/> Return to Batch Registry</button>
+          <motion.div key="detail" variants={pageTransition} initial="initial" animate="animate" exit="exit" className="bg-white/5 border border-white/10 rounded-[48px] p-10 lg:p-16 shadow-2xl relative overflow-hidden">
+            <button onClick={() => setSelectedGroup(null)} className="mb-12 flex items-center gap-2 text-slate-500 hover:text-white transition-all text-[11px] font-black uppercase tracking-[0.3em] hover:tracking-[0.4em]"><ArrowLeft size={16}/> Return to Registry</button>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
                <div className="lg:col-span-2">
-                  <div className="flex items-center gap-3 mb-6">
-                     <span className="text-amber-500 font-black text-sm uppercase tracking-[0.3em]">{selectedGroup.id}</span>
-                     <div className="h-1 flex-1 bg-gradient-to-r from-amber-500/20 to-transparent rounded-full" />
-                  </div>
+                  <span className="text-amber-500 font-black text-sm uppercase tracking-[0.3em] mb-4 block">{selectedGroup.id}</span>
                   <h2 className="text-4xl lg:text-6xl font-black text-white tracking-tighter uppercase italic leading-none mb-8 underline decoration-amber-500/50 decoration-[12px]">{selectedGroup.title}</h2>
                   <div className="flex flex-wrap gap-6 mt-12">
-                     <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] flex items-center gap-4"><div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-black italic">G</div><div><p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Lead Academic Guide</p><p className="text-white font-bold text-lg">{selectedGroup.guide}</p></div></div>
-                     <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] flex items-center gap-4"><div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black italic">S</div><div><p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Sync Authority</p><p className="text-emerald-400 font-black text-lg uppercase italic tracking-widest">Active Node</p></div></div>
+                     <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] flex items-center gap-4"><div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-black italic">G</div><div><p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Lead Guide</p><p className="text-white font-bold text-lg">{selectedGroup.guide}</p></div></div>
+                     <div className="bg-white/5 border border-white/10 p-6 rounded-[32px] flex items-center gap-4"><div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black italic">S</div><div><p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Sync</p><p className="text-emerald-400 font-black text-lg uppercase italic tracking-widest">Active</p></div></div>
                   </div>
                </div>
                <div className="space-y-5">
-                  <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-6 ml-2">Evaluation Breakdown</h5>
+                  <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-6 ml-2">Breakdown</h5>
                   {[
-                    { l: "Seminar 1 Marks", v: selectedGroup.marks.seminar1, max: 20, c: "indigo" },
-                    { l: "Seminar 2 Marks", v: selectedGroup.marks.seminar2, max: 20, c: "purple" },
-                    { l: "Outcome Metric", v: selectedGroup.marks.outcome, max: 30, c: "blue" },
-                    { l: "Performance Node", v: selectedGroup.marks.overall, max: 30, c: "rose" },
+                    { l: "Seminar 1", v: selectedGroup.marks.seminar1, max: 20, c: "indigo" },
+                    { l: "Seminar 2", v: selectedGroup.marks.seminar2, max: 20, c: "purple" },
+                    { l: "Outcome", v: selectedGroup.marks.outcome, max: 30, c: "blue" },
+                    { l: "Performance", v: selectedGroup.marks.overall, max: 30, c: "rose" },
                   ].map(m => (
                     <div key={m.l} className="bg-white/5 p-7 rounded-[32px] border border-white/5 flex items-center justify-between group hover:bg-white/10 transition-all shadow-xl">
                       <div><p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-1">{m.l}</p><p className="text-3xl font-black text-white tracking-tighter italic">{m.v}<span className="text-sm text-slate-700 ml-2 italic">/ {m.max}</span></p></div>
@@ -372,7 +382,7 @@ const GroupEvaluations = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </AppLayout>
+    </motion.div>
   );
 };
 
@@ -381,31 +391,30 @@ const AdminDashboard = () => {
   const activities = [
     { u: "Anandhu Sebastian", a: "Uploaded Literature Review", t: "2 mins ago", r: "Student" },
     { u: "Prof. Neha Zade", a: "Authorized Group A-12 Valuation", t: "15 mins ago", r: "Faculty" },
-    { u: "HOD CSE", a: "Accessed GRP-24-16 Encrypted Log", t: "1 hour ago", r: "HOD" },
+    { u: "HOD CSE", a: "Accessed GRP-24-16 Log", t: "1 hour ago", r: "HOD" },
     { u: "Rahul V.", a: "Submitted Phase 2 System Design", t: "3 hours ago", r: "Student" },
-    { u: "Sneha K.", a: "Modified Project Abstract Node", t: "5 hours ago", r: "Student" },
   ];
   return (
-    <AppLayout activeTitle="Master Panel">
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-8">
          {[
            { l: "Active Nodes", v: "1,248", i: <Cpu/>, c: "rose" },
            { l: "Database Load", v: "84.2 GB", i: <HardDrive/>, c: "indigo" },
-           { l: "Authority Lvl", v: "Root-Master", i: <Shield/>, c: "emerald" },
+           { l: "Authority Lvl", v: "Master", i: <Shield/>, c: "emerald" },
            { l: "Uptime Pulse", v: "99.9%", i: <Activity/>, c: "blue" },
          ].map(s => (
-           <div key={s.l} className="bg-white/5 border border-white/10 rounded-[32px] p-8 group transition-all hover:bg-white/[0.08] shadow-2xl">
+           <motion.div key={s.l} variants={itemVariants} className="bg-white/5 border border-white/10 rounded-[32px] p-8 group transition-all hover:bg-white/[0.08] shadow-2xl">
              <div className="flex items-center justify-between mb-6"><div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:scale-110 group-hover:text-white transition-all">{s.i}</div><span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/10 px-2 py-1 rounded-md">Live</span></div>
              <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{s.l}</p><p className="text-3xl font-black text-white uppercase italic tracking-tighter">{s.v}</p>
-           </div>
+           </motion.div>
          ))}
       </div>
-      <div className="bg-white/5 border border-white/10 rounded-[48px] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)]">
+      <motion.div variants={itemVariants} className="bg-white/5 border border-white/10 rounded-[48px] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)]">
         <div className="p-10 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-           <h3 className="text-white font-black text-xl flex items-center gap-4 uppercase tracking-tighter"><MonitorDot size={24} className="text-rose-500" /> Intelligence Monitor • System Feed</h3>
+           <h3 className="text-white font-black text-xl flex items-center gap-4 uppercase tracking-tighter"><MonitorDot size={24} className="text-rose-500" /> Intelligence Monitor</h3>
            <div className="flex items-center gap-3">
               <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Core Synchronized</span>
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Network Synchronized</span>
            </div>
         </div>
         <div className="overflow-x-auto">
@@ -413,9 +422,9 @@ const AdminDashboard = () => {
             <thead><tr className="bg-white/[0.01] border-b border-white/5 uppercase">
                 <th className="px-10 py-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Authorized Operator</th>
                 <th className="px-10 py-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Action Command</th>
-                <th className="px-10 py-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Synchronization</th>
+                <th className="px-10 py-6 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Sync</th>
             </tr></thead>
-            <tbody className="divide-y divide-white/5 font-medium">
+            <tbody className="divide-y divide-white/5">
               {activities.map((act, i) => (
                 <tr key={i} className="hover:bg-white/[0.04] transition-all group">
                   <td className="px-10 py-7"><div className="flex items-center gap-4"><div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-[11px] font-black text-slate-500 group-hover:bg-rose-600 group-hover:text-white transition-all uppercase italic">{act.u[0]}</div><span className="text-sm font-bold text-white uppercase italic tracking-tight">{act.u}</span></div></td>
@@ -426,16 +435,16 @@ const AdminDashboard = () => {
             </tbody>
           </table>
         </div>
-      </div>
-    </AppLayout>
+      </motion.div>
+    </motion.div>
   );
 };
 
 // --- STUDENT DASHBOARD ---
 const StudentDashboard = () => (
-  <AppLayout activeTitle="Dashboard">
+  <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[48px] p-10 lg:p-14 shadow-2xl relative overflow-hidden group border border-white/10">
+      <motion.div variants={itemVariants} className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[48px] p-10 lg:p-14 shadow-2xl relative overflow-hidden group border border-white/10">
         <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 blur-[90px] rounded-full -mr-32 -mt-32 pointer-events-none group-hover:scale-110 transition-transform duration-700" />
         <div className="relative z-10 flex flex-col sm:flex-row items-center gap-10 text-center sm:text-left">
           <motion.div whileHover={{ rotate: 5, scale: 1.05 }} className="w-32 h-32 rounded-[40px] bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center text-6xl font-black text-white shadow-2xl">{studentInfo.name[0]}</motion.div>
@@ -448,7 +457,7 @@ const StudentDashboard = () => (
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className="grid grid-cols-2 gap-4 lg:gap-6">
         {[
           { l: "Attendance Pulse", v: studentInfo.attendance, i: <CheckCircle2 size={18}/>, c: "emerald" },
@@ -456,15 +465,15 @@ const StudentDashboard = () => (
           { l: "Upload Sync", v: "Operational", i: <Activity size={18}/>, c: "blue" },
           { l: "Term Year Node", v: "2nd Year", i: <Calendar size={18}/>, c: "rose" },
         ].map(s => (
-          <div key={s.l} className="bg-white/5 border border-white/10 rounded-[32px] p-8 hover:bg-white/[0.08] transition-all shadow-xl group">
+          <motion.div key={s.l} variants={itemVariants} className="bg-white/5 border border-white/10 rounded-[32px] p-8 hover:bg-white/[0.08] transition-all shadow-xl group">
             <span className={`text-${s.c}-400 opacity-40 block mb-4 group-hover:scale-110 transition-transform`}>{s.i}</span>
             <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{s.l}</p>
             <p className="text-2xl font-black text-white uppercase italic tracking-tighter">{s.v}</p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
-  </AppLayout>
+  </motion.div>
 );
 
 // --- MAIN ROUTER ---
@@ -473,21 +482,32 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        
+        {/* Admin Specific */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin-monitor" element={<AdminDashboard />} />
-        <Route path="/hod" element={<AppLayout activeTitle="Global View"><div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">{[{ l: "Dept Health", v: "Optimal", c: "emerald" }, { l: "Active Groups", v: "16 Clusters", c: "amber" }, { l: "Pending Audit", v: "04 Nodes", c: "rose" }].map(s => (<div key={s.l} className="bg-white/5 border border-white/10 p-10 rounded-[40px] group hover:bg-white/[0.08] transition-all shadow-2xl"><p className="text-slate-500 text-[11px] font-black uppercase tracking-[0.4em] mb-4">{s.l}</p><p className="text-4xl font-black text-white uppercase italic tracking-tighter leading-none">{s.v}</p></div>))}</div><div className="bg-white/5 border border-white/10 rounded-[56px] p-24 text-center border-dashed border-[3px] shadow-inner relative overflow-hidden"><div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent pointer-events-none" /><Activity size={56} className="mx-auto text-slate-700 mb-8 animate-pulse opacity-40" /><p className="text-slate-600 font-black text-sm uppercase tracking-[0.6em] italic">Streaming Batch Intelligence Node Primary Connectivity Active</p></div></AppLayout>} />
-        <Route path="/hod-evaluations" element={<GroupEvaluations />} />
-        <Route path="/profile" element={<StudentDashboard />} />
-        <Route path="/group" element={<AppLayout activeTitle="Allotted Group"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Authorized Node: {studentInfo.group} • Guide Access Node: {studentInfo.guide}</div></AppLayout>} />
-        <Route path="/status" element={<AppLayout activeTitle="My Status"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Network Log Sync Status: {studentInfo.uploadStatus}</div></AppLayout>} />
-        <Route path="/query" element={<AppLayout activeTitle="Communication"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Encrypted Secure Line Ready</div></AppLayout>} />
-        <Route path="/faculty" element={<AppLayout activeTitle="Faculty Console"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic shadow-2xl">Faculty Analytics Primary Terminal</div></AppLayout>} />
-        <Route path="/faculty-groups" element={<AppLayout activeTitle="Assigned Batches"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Guide Registry Node Online</div></AppLayout>} />
-        <Route path="/evaluate" element={<AppLayout activeTitle="Evaluation Stack"><div className="bg-white/5 border border-white/10 rounded-[56px] p-14 lg:p-20 shadow-2xl shadow-indigo-500/5 relative overflow-hidden"><div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none"><ClipboardCheck size={200}/></div><div className="relative z-10 mb-14 border-b border-white/10 pb-10"><h4 className="text-4xl font-black text-white mb-3 tracking-tighter uppercase italic underline decoration-indigo-500 decoration-[12px]">Assessment Stack: GRP-24-12</h4><p className="text-slate-500 text-[11px] font-black uppercase tracking-[0.5em] opacity-60">Continuous Valuation Logic • Semester IV Lifecycle</p></div><div className="space-y-5 max-w-4xl">{[{ label: "Seminar 1 Valuation", weight: "20 Marks" }, { label: "Seminar 2 Valuation", weight: "20 Marks" }, { label: "Research Outcome Log", weight: "30 Marks" }, { label: "Final Performance Pulse", weight: "30 Marks" }].map(mark => (<div key={mark.label} className="bg-white/5 border border-white/10 rounded-[32px] p-8 flex flex-col md:flex-row justify-between items-center gap-10 group hover:bg-white/[0.08] transition-all hover:translate-x-2"><div className="text-center md:text-left"><p className="text-white font-black tracking-tight uppercase text-lg italic">{mark.label}</p><p className="text-slate-600 text-[11px] font-black uppercase tracking-[0.3em] mt-2">{mark.weight}</p></div><div className="flex items-center gap-5"><input type="number" placeholder="00" className="w-28 bg-[#020617] border border-white/10 rounded-2xl p-5 text-center text-white focus:border-indigo-500/50 font-black text-2xl shadow-inner outline-none transition-all" /><button className="bg-indigo-600 text-white p-5 rounded-2xl hover:bg-indigo-500 transition-all shadow-xl active:scale-95"><CheckCheck size={24}/></button></div></div>))}</div></div></AppLayout>} />
-        <Route path="/attendance" element={<AppLayout activeTitle="Presence Log"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Biometric Identity Sync Active</div></AppLayout>} />
-        <Route path="/freeze" element={<AppLayout activeTitle="Freeze Console"><div className="p-24 text-center bg-amber-600/5 rounded-[56px] text-amber-500 font-black tracking-[0.5em] text-sm uppercase italic underline decoration-amber-500/50 decoration-[8px]">System Interlock: Terminal Access Freeze Verified</div></AppLayout>} />
+
+        {/* HOD Specific */}
+        <Route path="/hod" element={<AppLayout activeTitle="Global View"><motion.div variants={containerVariants} initial="hidden" animate="visible"><div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">{[{ l: "Dept Health", v: "Optimal", c: "emerald" }, { l: "Active Groups", v: "16 Clusters", c: "amber" }, { l: "Pending Audit", v: "04 Nodes", c: "rose" }].map(s => (<motion.div key={s.l} variants={itemVariants} className="bg-white/5 border border-white/10 p-10 rounded-[40px] group hover:bg-white/[0.08] transition-all shadow-2xl"><p className="text-slate-500 text-[11px] font-black uppercase tracking-[0.4em] mb-4">{s.l}</p><p className="text-4xl font-black text-white uppercase italic tracking-tighter leading-none">{s.v}</p></motion.div>))}</div><motion.div variants={itemVariants} className="bg-white/5 border border-white/10 rounded-[56px] p-24 text-center border-dashed border-[3px] shadow-inner relative overflow-hidden"><Activity size={56} className="mx-auto text-slate-700 mb-8 animate-pulse opacity-40" /><p className="text-slate-600 font-black text-sm uppercase tracking-[0.6em] italic">Intelligence Node Connectivity Active</p></motion.div></motion.div></AppLayout>} />
+        <Route path="/hod-evaluations" element={<AppLayout activeTitle="Cluster Evaluations"><GroupEvaluations /></AppLayout>} />
+        <Route path="/freeze" element={<AppLayout activeTitle="Freeze Console"><div className="p-24 text-center bg-amber-600/5 rounded-[56px] text-amber-500 font-black tracking-[0.5em] text-sm uppercase italic underline decoration-amber-500/50 decoration-[8px]">System Interlock Active</div></AppLayout>} />
         <Route path="/verify" element={<AppLayout activeTitle="Audit Valuation"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Global Valuation Audit Node Verified</div></AppLayout>} />
-        <Route path="/history" element={<AppLayout activeTitle="System Audit"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Secured Multi-Chain Transaction Ledger Stream</div></AppLayout>} />
+
+        {/* Student Routes */}
+        <Route path="/profile" element={<AppLayout activeTitle="Dashboard"><StudentDashboard /></AppLayout>} />
+        <Route path="/group" element={<AppLayout activeTitle="Allotted Group"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Authorized Node: {studentInfo.group}</div></AppLayout>} />
+        <Route path="/status" element={<AppLayout activeTitle="My Status"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Log Sync Status: {studentInfo.uploadStatus}</div></AppLayout>} />
+        <Route path="/query" element={<AppLayout activeTitle="Communication"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Encrypted Secure Line Ready</div></AppLayout>} />
+
+        {/* Faculty Routes */}
+        <Route path="/faculty" element={<AppLayout activeTitle="Faculty Console"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Faculty Analytics Terminal</div></AppLayout>} />
+        <Route path="/faculty-groups" element={<AppLayout activeTitle="Assigned Batches"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Guide Registry Node Online</div></AppLayout>} />
+        <Route path="/evaluate" element={<AppLayout activeTitle="Evaluation Stack"><div className="bg-white/5 border border-white/10 rounded-[56px] p-14 shadow-2xl relative overflow-hidden"><div className="relative z-10 mb-14 border-b border-white/10 pb-10"><h4 className="text-4xl font-black text-white mb-3 tracking-tighter uppercase italic underline decoration-indigo-500 decoration-[12px]">Assessment Stack: GRP-24-12</h4><p className="text-slate-500 text-[11px] font-black uppercase tracking-[0.5em] opacity-60">Continuous Valuation Logic</p></div><div className="space-y-5 max-w-4xl">{[{ label: "Seminar 1 Valuation", weight: "20 Marks" }, { label: "Seminar 2 Valuation", weight: "20 Marks" }].map(mark => (<div key={mark.label} className="bg-white/5 border border-white/10 rounded-[32px] p-8 flex flex-col md:flex-row justify-between items-center gap-10 group hover:bg-white/[0.08] transition-all"><div className="text-center md:text-left"><p className="text-white font-black tracking-tight uppercase text-lg italic">{mark.label}</p><p className="text-slate-600 text-[11px] font-black uppercase tracking-[0.3em] mt-2">{mark.weight}</p></div><div className="flex items-center gap-5"><input type="number" placeholder="00" className="w-28 bg-[#020617] border border-white/10 rounded-2xl p-5 text-center text-white focus:border-indigo-500/50 font-black text-2xl" /><button className="bg-indigo-600 text-white p-5 rounded-2xl hover:bg-indigo-500 transition-all shadow-xl"><CheckCheck size={24}/></button></div></div>))}</div></div></AppLayout>} />
+        <Route path="/attendance" element={<AppLayout activeTitle="Presence Log"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Biometric Identity Sync Active</div></AppLayout>} />
+
+        {/* Global Audit */}
+        <Route path="/history" element={<AppLayout activeTitle="System Audit"><div className="p-24 text-center border-dashed border-[3px] rounded-[56px] text-slate-700 font-black tracking-[0.5em] text-sm uppercase italic">Immutable Ledger Stream</div></AppLayout>} />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <SpeedInsights />
